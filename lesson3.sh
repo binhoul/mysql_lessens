@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/bash
 
 usage()
 {
@@ -18,7 +18,8 @@ EOF
 
 parse_options()
 {
-[ $# -le 0 ] && echo "no options to parse, use defaults"
+[ $# -le 0 ] && echo "no options to parse, use defaults 
+the default interval is $def_interval sec, the default counts is $def_counts."
 while [ $# -gt 0 ]
     do
     case $1 in
@@ -29,7 +30,11 @@ while [ $# -gt 0 ]
         def_counts=`echo $1 |sed -n "s/^--counts=//p"`
         ;;
         --output=*)
-        def_output=`echo $1 |sed -n "s/^--output=//p"`/`date +%Y-%m-%d-%H:%M`/${def_command}.log
+        def_output=`echo $1 |sed -n "s/^--output=//p"`
+        ;;
+        --help|*)
+        usage
+        exit 1
         ;;
     esac
     shift
@@ -40,9 +45,10 @@ done
 parse_command()
 {
 [ $# -le 0 ] && usage && exit
+[ $1 == vmstat -o $1 == iostat -o $1 == mpstat ] || ( usage && exit 1 )
 def_command=$1
 shift
-parse_options
+parse_options $@
 }
 
 
@@ -52,12 +58,16 @@ parse_options
 #default settings
 def_command=
 def_interval=3
-def_counts=10
+def_counts=5
 
 parse_command $@
-def_output="`date +%Y-%m-%d-%H:%M`/${def_command}.log"
+if [ ${#def_output} == 0 ]
+then
+def_output="./`date +%Y-%m-%d-%H:%M`/${def_command}.log"
+def_output="${def_output}/`date +%Y-%m-%d-%H:%M`/${def_command}.log"
 
-[ -d ${$def_output%/} ]  mkdir -p ${$def_output%/}
+[ -d ${def_output%/*} ] || mkdir -p ${def_output%/*}
+echo "the output is writen into $def_output ..."
 $def_command $def_interval $def_counts >> $def_output
 
 
