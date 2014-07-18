@@ -14,17 +14,16 @@ cal_pcthit()
                |grep Value |awk '{print $2}'`
     key_read_requests=`$EXEC -h$HOST -u$USER -p$PASS -e "show global status like \"key_read_requests\"\G" \
                        |grep Value |awk '{print $2}'`
-    pcthit=`echo "scale=4;$key_reads/$key_read_requests*100" |bc`
-    echo -e "\033[3;9H$pcthit"
+    pcthit=`echo "scale=4;(1 - $key_reads/$key_read_requests)*100" |bc`
+    echo -e "\033[3;9Hkey_buffer hits:$pcthit"
 
 }
 
 #while true
 #do
-SECS=`expr $COUNTS * $INTERVAL`
-echo $SECS
+SECS=`expr $COUNTS '*' $INTERVAL`
 clear
-echo -e "\033[2;1HRunning for $SECS seconds"
+echo -e "\033[2;1HRunning for $SECS seconds:"
 cal_pcthit
 COUNTS=`expr $COUNTS + 1`
 sleep $INTERVAL
