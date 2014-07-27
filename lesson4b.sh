@@ -8,10 +8,6 @@ INTERVAL=3
 EXEC=/usr/bin/mysql
 COUNTS=0
 
-
-#declare -i innodb_buffer_pool_reads
-#declare -i innodb_buffer_pool_read_requests
-
 cal_key_pcthit()
 {
     key_reads=`$EXEC -h$HOST -u$USER -p$PASS -e "show global status like \"key_reads\"\G" \
@@ -32,21 +28,12 @@ cal_innodb_pcthit()
     echo -e "\033[5;1HInnodb Hits: $innodb_pcthit%\r\c"
 
 }
-cal_innodb_pcthits()
-{
-    eval $($EXEC -h$HOST -u$USER -p$PASS -e "show global status like 'Innodb_buffer_pool_read%';" |grep Innodb |awk '{if($1==Innodb_buffer_pool_reads) {printf("innodb_buffer_pool_reads=%g",$2)} else if($1==Innodb_buffer_pool_read_requests) {printf("innodb_buffer_pool_read_requests=%g",$2)}}')
-    echo $innodb_buffer_pool_reads,$innodb_buffer_pool_read_requests
-    innodb_pcthit=`echo "scale=4;(1 - $innodb_buffer_pool_reads/$innodb_buffer_pool_read_requests)*100" |bc`
-#    echo -e "\033[5;1HInnodb Hits: $innodb_pcthit%\r\c"
-
-
-}
-#clear
-#while true
-#do
-#SECS=`expr $COUNTS '*' $INTERVAL`
-#echo -e "\033[2;1HRunning for $SECS seconds:"
-cal_innodb_pcthits
+clear
+while true
+do
+SECS=`expr $COUNTS '*' $INTERVAL`
+echo -e "\033[2;1HRunning for $SECS seconds:"
+cal_innodb_pcthit
 COUNTS=`expr $COUNTS + 1`
-#sleep $INTERVAL
-#done
+sleep $INTERVAL
+done
