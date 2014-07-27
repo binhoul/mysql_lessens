@@ -10,7 +10,7 @@ import pdb
 
 host = '127.0.0.1'
 user = 'root'
-password = 'fengmao'
+password = 'fengmxx'
 
 conn = MySQLdb.connect(host = host, user = user, passwd = password, db = 'mysql', port = 3306)
 cur = conn.cursor()
