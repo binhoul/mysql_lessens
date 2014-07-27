@@ -19,6 +19,7 @@ cal_key_pcthit()
     key_read_requests=`$EXEC -h$HOST -u$USER -p$PASS -e "show global status like \"key_read_requests\"\G" \
                        |grep Value |awk '{print $2}'`
     pcthit=`echo "scale=4;(1 - $key_reads/$key_read_requests)*100" |bc`
+<<<<<<< HEAD
     echo -e "\033[3;1HQcache_Hits: $pcthit%\r\c"
 
 }
@@ -30,6 +31,9 @@ cal_innodb_pcthit()
                               |grep Value |awk '{print $2}'`
     innodb_pcthit=`echo "scale=4;(1 - $innodb_buffer_pool_reads/$innodb_buffer_pool_read_requests)*100" |bc`
     echo -e "\033[5;1HInnodb Hits: $innodb_pcthit%\r\c"
+=======
+    echo -e "\033[3;9Hkey_buffer hits:$pcthit"
+>>>>>>> c7fbd614c4d2048683eac8f17318d23878af7e68
 
 }
 cal_innodb_pcthits()
@@ -44,9 +48,16 @@ cal_innodb_pcthits()
 #clear
 #while true
 #do
+<<<<<<< HEAD
 #SECS=`expr $COUNTS '*' $INTERVAL`
 #echo -e "\033[2;1HRunning for $SECS seconds:"
 cal_innodb_pcthits
+=======
+SECS=`expr $COUNTS '*' $INTERVAL`
+clear
+echo -e "\033[2;1HRunning for $SECS seconds:"
+cal_pcthit
+>>>>>>> c7fbd614c4d2048683eac8f17318d23878af7e68
 COUNTS=`expr $COUNTS + 1`
 #sleep $INTERVAL
 #done
