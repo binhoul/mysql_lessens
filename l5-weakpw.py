@@ -15,12 +15,14 @@ inlists = [
 pwdlength_min = 1
 pwdlength_max = 8
 
-#rules: 
-distance = [0,1]
-
-weakpass = ""
-
 def weakpass(inarray, pwdlength_max):
+    """
+    generate the weakpassword for two type,
+    12345...
+    or
+    aaaaa...
+    length between 1 and 8
+    """
     filehandle = open("./password.list",'a')
     atomlist = inarray
     increase_distance = [0,1]
@@ -30,7 +32,7 @@ def weakpass(inarray, pwdlength_max):
             currword = baseword
             tmplength = 1
             filehandle.write(weakpass + '\n')
-            while tmplength <= pwdlength_max and atomlist.index(baseword) + tmplength * distance < len(atomlist):
+            while tmplength < pwdlength_max and atomlist.index(baseword) + tmplength * distance < len(atomlist):
                 nextword = atomlist[atomlist.index(currword) + distance ]
                 weakpass += nextword
                 filehandle.write(weakpass + '\n')
